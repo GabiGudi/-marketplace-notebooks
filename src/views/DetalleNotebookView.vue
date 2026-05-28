@@ -1,4 +1,5 @@
 <script setup>
+import favoritos from '../Services/favoritos.js'
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '../Services/api.js'
@@ -9,6 +10,7 @@ const id = route.params.id
 const notebook = ref(null)
 const cargando = ref(true)
 const error = ref(null)
+const esFavorito = ref(false)
 
 const precio = computed(() => {
   if (!notebook.value) return 0
@@ -18,12 +20,18 @@ const precio = computed(() => {
 onMounted(async () => {
   try {
     notebook.value = await api.getNotebook(id)
+    esFavorito.value = favoritos.esFavorito(id)
   } catch (e) {
     error.value = 'No se pudo cargar el producto. Verificá el link o probá refrescando.'
   } finally {
     cargando.value = false
   }
 })
+
+function toggleFavorito() {
+  favoritos.alternar(id)
+  esFavorito.value = !esFavorito.value
+}
 </script>
 
 <template>
@@ -53,7 +61,9 @@ onMounted(async () => {
 
       <div class="detalle__acciones">
         <button class="boton boton--primario">Comprar</button>
-        <button class="boton boton--secundario">⭐ Agregar a favoritos</button>
+        <button class="boton boton--secundario" @click="toggleFavorito">
+          {{ esFavorito ? '★ Quitar de favoritos' : '☆ Agregar a favoritos' }}
+        </button>
       </div>
 
       <a
