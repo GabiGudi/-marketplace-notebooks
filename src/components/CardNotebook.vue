@@ -1,11 +1,17 @@
 <script setup>
 import { RouterLink } from 'vue-router'
+import { computed } from 'vue'
 
 const props = defineProps({
   notebook: {
     type: Object,
     required: true,
   },
+})
+
+// Precio mock calculado en base al id (mientras no esté en la API)
+const precio = computed(() => {
+  return props.notebook.id * 200000 + 500000
 })
 </script>
 
@@ -14,7 +20,7 @@ const props = defineProps({
     <h2 class="producto__nombre">{{ notebook.title }}</h2>
     <img class="producto__imagen" :src="notebook.image_url" :alt="notebook.title" />
     <p class="producto__descripcion">{{ notebook.description }}</p>
-    <p class="producto__precio">${{ notebook.price.toLocaleString('es-AR') }}</p>
+    <p class="producto__precio">${{ precio.toLocaleString('es-AR') }}</p>
     <RouterLink :to="`/notebook/${notebook.id}`" class="producto__boton"> Ver más </RouterLink>
   </div>
 </template>
@@ -61,6 +67,9 @@ const props = defineProps({
   cursor: pointer;
   font-size: 1rem;
   margin-top: 0.5rem;
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
 }
 
 .producto__boton:hover {
