@@ -1,12 +1,14 @@
 <script setup>
-import favoritos from '../Services/favoritos.js'
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '../Services/api.js'
+import favoritos from '../Services/favoritos.js'
+import { useCarritoStore } from '../stores/carrito.js'
 
 const route = useRoute()
 const id = route.params.id
 
+const carrito = useCarritoStore()
 const notebook = ref(null)
 const cargando = ref(true)
 const error = ref(null)
@@ -31,6 +33,11 @@ onMounted(async () => {
 function toggleFavorito() {
   favoritos.alternar(id)
   esFavorito.value = !esFavorito.value
+}
+
+function comprar() {
+  carrito.agregar(notebook.value, precio.value)
+  alert(`¡"${notebook.value.title}" agregada al carrito!`)
 }
 </script>
 
@@ -60,7 +67,7 @@ function toggleFavorito() {
       <p class="detalle__precio">${{ precio.toLocaleString('es-AR') }}</p>
 
       <div class="detalle__acciones">
-        <button class="boton boton--primario">Comprar</button>
+        <button class="boton boton--primario" @click="comprar">Comprar</button>
         <button class="boton boton--secundario" @click="toggleFavorito">
           {{ esFavorito ? '★ Quitar de favoritos' : '☆ Agregar a favoritos' }}
         </button>

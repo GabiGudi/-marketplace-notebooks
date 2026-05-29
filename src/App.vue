@@ -1,5 +1,8 @@
 <script setup>
 import { RouterView, RouterLink } from 'vue-router'
+import { useCarritoStore } from './stores/carrito.js'
+
+const carrito = useCarritoStore()
 </script>
 
 <template>
@@ -12,6 +15,9 @@ import { RouterView, RouterLink } from 'vue-router'
     <nav class="nav">
       <RouterLink to="/" class="nav__link">Inicio</RouterLink>
       <RouterLink to="/alta" class="nav__link">Cargar Notebook</RouterLink>
+      <span class="nav__carrito">
+        🛒 <strong>{{ carrito.cantidadTotal }}</strong>
+      </span>
     </nav>
   </header>
 
@@ -81,5 +87,13 @@ import { RouterView, RouterLink } from 'vue-router'
   padding: 1rem;
   text-align: center;
   margin-top: 2rem;
+}
+
+.nav__carrito {
+  background-color: rgba(0, 0, 0, 0.15);
+  color: #333;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: bold;
 }
 </style>
